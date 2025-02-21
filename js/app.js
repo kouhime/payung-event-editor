@@ -363,9 +363,9 @@ async function loadStateFromDBToUI() {
           id,
           title: title || uiConfig.defaultNodeTitle
       });
-      const sceneData = dbInstance.exec(`SELECT background_file_id, dialogue, speaker FROM scenes WHERE node_id = ?`, [id])[0]?.values?.[0];
+      const sceneData = dbInstance.exec(`SELECT background_file_id, dialogue, speaker, speaker_color FROM scenes WHERE node_id = ?`, [id])[0]?.values?.[0];
       if (sceneData) {
-          const [background_file_id, dialogue, speaker] = sceneData;
+          const [background_file_id, dialogue, speaker, speaker_color] = sceneData;
           let background_image = null;
           if (background_file_id) {
               const fileData = dbInstance.exec(`SELECT base64_data FROM files WHERE id = ?`, [background_file_id])[0]?.values?.[0]?.[0];
@@ -374,6 +374,7 @@ async function loadStateFromDBToUI() {
           nodeData.scene.background = background_image;
           nodeData.dialogue = dialogue || "";
           nodeData.speaker = speaker || "";
+          nodeData.speakerColor = speaker_color || null
       }
       const spriteRows = dbInstance.exec(`SELECT id, file_id, x, y, width, height, focus, animation_class, continuity_id, flip, zIndex FROM sprites WHERE scene_node_id = ?`, [id])[0]?.values || [];
       spriteRows.forEach(([spriteId, file_id, spriteX, spriteY, width, height, focus, animation_class, continuity_id, flip, zIndex]) => {

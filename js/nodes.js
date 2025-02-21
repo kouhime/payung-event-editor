@@ -121,6 +121,7 @@ import { createRow } from "./items.js";
         const nodeItems = sidebar.querySelector("#nodeItems");
         nodeItems.innerHTML = "";
         const nodeData = nodes.find(n => n.id === node.dataset.id);
+        const speakerColorPicker = document.getElementById('speakerColorPicker');
 
         document.getElementById("speakerInput").value = nodeData.speaker || "";
         if (window.dialogueEditor) {
@@ -148,6 +149,7 @@ import { createRow } from "./items.js";
         const targetScrollY = nodeCenterY - viewportCenterY;
 
         loadSceneForNode(nodeData);
+        speakerColorPicker.value = nodeData.speakerColor
         window.selectedNodeData = nodeData;
         window.selectedNode = node;
 

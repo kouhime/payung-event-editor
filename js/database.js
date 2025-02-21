@@ -50,6 +50,7 @@ export async function initDatabase() {
       node_id TEXT PRIMARY KEY,
       background_file_id INTEGER,
       dialogue TEXT,
+      speaker_color TEXT,
       speaker TEXT,
       FOREIGN KEY (node_id) REFERENCES nodes(id),
       FOREIGN KEY (background_file_id) REFERENCES files(id)
@@ -95,7 +96,8 @@ export function saveStateToDB(db, connections) {
       rows,
       scene,
       dialogue,
-      speaker
+      speaker,
+      speakerColor
   }) => {
       const x = parseInt(element.style.left) || 0;
       const y = parseInt(element.style.top) || 0;
@@ -119,9 +121,9 @@ export function saveStateToDB(db, connections) {
           }
       }
       if (!!backgroundFileId) {
-        db.run("INSERT INTO scenes (node_id, background_file_id, dialogue, speaker) VALUES (?, ?, ?, ?)", [id, backgroundFileId, dialogue, speaker]);
+        db.run("INSERT INTO scenes (node_id, background_file_id, dialogue, speaker, speaker_color) VALUES (?, ?, ?, ?, ?)", [id, backgroundFileId, dialogue, speaker, speakerColor]);
       } else {
-        db.run("INSERT INTO scenes (node_id, dialogue, speaker) VALUES (?, ?, ?)", [id, dialogue, speaker]);
+        db.run("INSERT INTO scenes (node_id, dialogue, speaker, speaker_color) VALUES (?, ?, ?, ?)", [id, dialogue, speaker, speakerColor]);
       }
 
 
