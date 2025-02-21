@@ -4,11 +4,39 @@ export async function initDatabase() {
   });
   const db = new SQL.Database();
   db.run(`
+    CREATE TABLE entities (
+      id TEXT PRIMARY KEY,
+      title TEXT,
+      thumbnail TEXT
+    );
+    CREATE TABLE sounds (
+      id TEXT PRIMARY KEY,
+      file_id TEXT,
+      start_at TEXT,
+      start_stop BOOLEAN, -- IF TRUE THEN THE NODE WILL PLAY THIS SOUND WITH CONTINUITY, IF FALSE THEN WILL STOP THE CONTINUITY
+      coninuity_id TEXT,
+      volume INTEGER, -- 0 to 100
+      FOREIGN KEY (file_id) REFERENCES files(id)
+    );
+    CREATE TABLE changes (  -- WILL TAKE EFFECT IF NODE IS PLAYED
+      id TEXT PRIMARY KEY,
+      key TEXT,             -- VARIABLE NAME
+      value TEXT,           -- VALUE 
+      operator TEXT,        -- + - / * = // if array plus will be push, minus will be pop by the compiler
+      type TEXT             -- DATATYPE
+    );
+    CREATE TABLE variables (
+      id TEXT PRIMARY KEY,
+      key TEXT,             -- VARIABLE NAME
+      type TEXT             -- DATATYPE
+    );
     CREATE TABLE nodes (
       id TEXT PRIMARY KEY,
+      trigger_id TEXT,
       x INTEGER NOT NULL,
       y INTEGER NOT NULL,
-      title TEXT
+      title TEXT,
+      FOREIGN KEY (trigger_id) REFERENCES entities(id)
     );
     CREATE TABLE items (
       id TEXT PRIMARY KEY,
