@@ -62,7 +62,8 @@ import { createRow } from "./items.js";
                 sprites: []
             },
             dialogue: "",
-            speaker: ""
+            speaker: "",
+            speakerColor: "#ffffff"
         };
         nodes.push(nodeData);
         return nodeData;

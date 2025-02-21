@@ -393,7 +393,7 @@ function applyAnimations(sprite) {
         const originalY = sprite.mesh.position.y;
         tween({
             from: originalY,
-            to: originalY - 20,
+            to: originalY + 20,
             duration: 100,
             onUpdate: (value) => {
                 sprite.mesh.position.y = value;
@@ -402,7 +402,7 @@ function applyAnimations(sprite) {
                 tween({
                     from: sprite.mesh.position.y,
                     to: originalY,
-                    duration: 250,
+                    duration: 100,
                     onUpdate: (value) => {
                         sprite.mesh.position.y = value;
                     }
