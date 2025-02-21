@@ -303,7 +303,6 @@ spriteUpload.addEventListener('change', (e) => {
                 focus: true,
                 animationClass: '',
                 continuityIdentifier: '',
-                sfx: [],
                 zIndex: 0,    
                 flip: false   
             };
@@ -372,8 +371,6 @@ const spriteDetailModal = document.getElementById('spriteDetailModal');
 const spriteFocusToggle = document.getElementById('spriteFocusToggle');
 const spriteAnimClassInput = document.getElementById('spriteAnimClassInput');
 const spriteContinuityIdentifierInput = document.getElementById('spriteContinuityIdentifierInput');
-const spriteSfxList = document.getElementById('spriteSfxList');
-const addSpriteSfxBtn = document.getElementById('addSpriteSfxBtn');
 const saveSpriteDetailsBtn = document.getElementById('saveSpriteDetailsBtn');
 const closeSpriteDetailModal = document.getElementById('closeSpriteDetailModal');
 
@@ -389,67 +386,9 @@ function openSpriteDetailModal(sprite) {
     if (spriteZIndexInput) spriteZIndexInput.value = sprite.zIndex !== undefined ? sprite.zIndex : 0;
     if (spriteFlipToggle) spriteFlipToggle.checked = sprite.flip || false;
 
-    spriteSfxList.innerHTML = '';
-    (sprite.sfx || []).forEach(sfxItem => addSpriteSfxRow(sfxItem));
     spriteDetailModal.classList.remove('hidden');
     updateSelectionOutline();
 }
-
-function addSpriteSfxRow(preset = {}) {
-    const row = document.createElement('div');
-    row.className = 'sfx-row flex items-center gap-2';
-    const fileInput = document.createElement('input');
-    fileInput.type = 'file';
-    fileInput.accept = 'audio/*';
-    fileInput.className = 'sprite-sfx-file text-xs';
-    const fileLabel = document.createElement('span');
-    fileLabel.className = 'text-xs text-gray-300';
-    fileLabel.textContent = preset.fileName ? preset.fileName : 'No file';
-    fileInput.addEventListener('change', (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-        fileLabel.textContent = file.name;
-        const reader = new FileReader();
-        reader.onload = (event) => {
-            row.dataset.fileData = event.target.result;
-            row.dataset.fileName = file.name;
-        };
-        reader.readAsDataURL(file);
-    });
-    const loopLabel = document.createElement('label');
-    loopLabel.textContent = 'Loop';
-    const loopCheckbox = document.createElement('input');
-    loopCheckbox.type = 'checkbox';
-    loopCheckbox.className = 'sprite-sfx-loop';
-    loopCheckbox.checked = preset.loop || false;
-    loopLabel.prepend(loopCheckbox);
-    const autoLabel = document.createElement('label');
-    autoLabel.textContent = 'Auto';
-    const autoCheckbox = document.createElement('input');
-    autoCheckbox.type = 'checkbox';
-    autoCheckbox.className = 'sprite-sfx-auto';
-    autoCheckbox.checked = preset.auto || false;
-    autoLabel.prepend(autoCheckbox);
-    const volInput = document.createElement('input');
-    volInput.type = 'number';
-    volInput.min = '0';
-    volInput.max = '1';
-    volInput.step = '0.1';
-    volInput.value = preset.volume !== undefined ? preset.volume : '1';
-    volInput.className = 'sprite-sfx-volume text-xs w-16';
-    const delBtn = document.createElement('button');
-    delBtn.textContent = 'X';
-    delBtn.className = 'bg-red-700 bg-opacity-50 hover:bg-opacity-100 transition border-red-700 border text-xs px-1 py-1 rounded';
-    delBtn.addEventListener('click', () => row.remove());
-    row.appendChild(fileInput);
-    row.appendChild(fileLabel);
-    row.appendChild(loopLabel);
-    row.appendChild(autoLabel);
-    row.appendChild(volInput);
-    row.appendChild(delBtn);
-    spriteSfxList.appendChild(row);
-}
-addSpriteSfxBtn.addEventListener('click', () => addSpriteSfxRow());
 
 saveSpriteDetailsBtn.addEventListener('click', () => {
     if (!currentSprite) return;
@@ -477,24 +416,6 @@ saveSpriteDetailsBtn.addEventListener('click', () => {
     if (spriteZIndexInput) currentSprite.zIndex = parseFloat(spriteZIndexInput.value) || 0;
     if (spriteFlipToggle) currentSprite.flip = spriteFlipToggle.checked;
 
-    const sfxRows = spriteSfxList.querySelectorAll('.sfx-row');
-    const sfxData = [];
-    sfxRows.forEach(row => {
-        const fileData = row.dataset.fileData || null;
-        if (!fileData) return;
-        const fileName = row.dataset.fileName || '';
-        const loop = row.querySelector('.sprite-sfx-loop').checked;
-        const auto = row.querySelector('.sprite-sfx-auto').checked;
-        const volume = parseFloat(row.querySelector('.sprite-sfx-volume').value);
-        sfxData.push({
-            fileName,
-            fileData,
-            loop,
-            auto,
-            volume
-        });
-    });
-    currentSprite.sfx = sfxData;
     spriteDetailModal.classList.add('hidden');
     updateSpriteMesh(currentSprite);
 });
@@ -545,7 +466,6 @@ export function loadSceneForNode(nodeData) {
                 focus: spriteData.focus !== false,
                 animationClass: spriteData.animationClass || '',
                 continuityIdentifier: spriteData.continuityIdentifier || '',
-                sfx: spriteData.sfx || [],
                 zIndex: spriteData.zIndex !== undefined ? spriteData.zIndex : 0, 
                 flip: spriteData.flip !== undefined ? spriteData.flip : false         
             };
@@ -599,7 +519,6 @@ export function commitSceneChangesToNodeData() {
         focus: sprite.focus,
         animationClass: sprite.animationClass,
         continuityIdentifier: sprite.continuityIdentifier,
-        sfx: sprite.sfx,
         zIndex: sprite.zIndex, 
         flip: sprite.flip        
     }));

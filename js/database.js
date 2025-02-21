@@ -70,17 +70,6 @@ export async function initDatabase() {
       FOREIGN KEY (scene_node_id) REFERENCES nodes(id),
       FOREIGN KEY (file_id) REFERENCES files(id)
     );
-    CREATE TABLE sprite_sfx (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      sprite_id INTEGER NOT NULL,
-      file_name TEXT,
-      file_id INTEGER NOT NULL,
-      loop BOOLEAN NOT NULL,
-      auto BOOLEAN NOT NULL,
-      volume REAL NOT NULL,
-      FOREIGN KEY (sprite_id) REFERENCES sprites(id),
-      FOREIGN KEY (file_id) REFERENCES files(id)
-    );
   `);
   console.log("SQLite database initialized with optimized schema (base64 for sprites and backgrounds).");
   return db;
@@ -89,7 +78,6 @@ export function saveStateToDB(db, connections) {
   const nodes = window.nodes;
   
   if (!db) return console.error("Database is not initialized yet.");
-  db.run("DELETE FROM sprite_sfx");
   db.run("DELETE FROM sprites");
   db.run("DELETE FROM scenes");
   db.run("DELETE FROM files"); 
@@ -164,31 +152,6 @@ export function saveStateToDB(db, connections) {
             );
           }
           const spriteId = db.exec("SELECT last_insert_rowid()")[0].values[0][0];
-          spriteData.sfx.forEach(sfxItem => {
-              let sfxFileId;
-              const base64Data = sfxItem.fileData;
-              if (base64FileCache.has(base64Data)) {
-                  sfxFileId = base64FileCache.get(base64Data);
-              } else {
-                  let existingFileIdResult = db.exec("SELECT id FROM files WHERE base64_data = ?", [base64Data]);
-                  if (existingFileIdResult.length > 0) {
-                      sfxFileId = existingFileIdResult[0].values[0][0];
-                  } else {
-                      db.run("INSERT INTO files (base64_data) VALUES (?)", [base64Data]);
-                      sfxFileId = db.exec("SELECT last_insert_rowid()")[0].values[0][0];
-                  }
-                  base64FileCache.set(base64Data, sfxFileId);
-              }
-              if (!!sfxFileId) {
-                db.run("INSERT INTO sprite_sfx (sprite_id, file_name, file_id, loop, auto, volume) VALUES (?, ?, ?, ?, ?, ?)",
-                  [spriteId, sfxItem.fileName, sfxFileId, sfxItem.loop, sfxItem.auto, sfxItem.volume]
-                );
-              } else {
-                db.run("INSERT INTO sprite_sfx (sprite_id, loop, auto, volume) VALUES (?, ?, ?, ?, ?, ?)",
-                  [spriteId, sfxItem.loop, sfxItem.auto, sfxItem.volume]
-                );
-              }
-          });
       });
       rows.forEach(({
           itemId,

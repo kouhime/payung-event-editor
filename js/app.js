@@ -391,25 +391,9 @@ async function loadStateFromDBToUI() {
               focus: focus === 1,
               animationClass: animation_class || '',
               continuityIdentifier: continuity_id || '',
-              sfx: [],
               flip: flip,
               zIndex: zIndex
           };
-          const sfxRows = dbInstance.exec(`SELECT file_name, file_id, loop, auto, volume FROM sprite_sfx WHERE sprite_id = ?`, [spriteId])[0]?.values || [];
-          sfxRows.forEach(([file_name, file_id, loop, auto, volume]) => {
-              let file_data = null;
-              if (file_id) {
-                  const fileData = dbInstance.exec(`SELECT base64_data FROM files WHERE id = ?`, [file_id])[0]?.values?.[0]?.[0];
-                  file_data = fileData || null;
-              }
-              spriteDataObject.sfx.push({
-                  fileName: file_name,
-                  fileData: file_data,
-                  loop: loop === 1,
-                  auto: auto === 1,
-                  volume: volume
-              });
-          });
           nodeData.scene.sprites.push(spriteDataObject);
       });
   });

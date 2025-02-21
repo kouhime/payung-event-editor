@@ -19,8 +19,8 @@ A simple node editor module for payung event datatype. To be integrated with Pay
 
 **Current Bugs and Glitches:**
 
-*   [ ] SFX must be re-added each time a detail sprite is edited.
-*   [ ] SFX is not yet implemented in the scene preview.
+*   [X] SFX must be re-added each time a detail sprite is edited. (removed in Kaede)
+*   [X] SFX is not yet implemented in the scene preview. (removed in Kaede)
 *   [ ] Actor/Speaker color is not saved.
 
 ## Current Milestones (Kaede)
