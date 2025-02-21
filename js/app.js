@@ -121,7 +121,8 @@ let panStartX, panStartY, initialScrollX, initialScrollY;
 initDatabase().then(db => dbInstance = db);
 
 editor.addEventListener("mousedown", e => {
-  if (e.target !== editor) return;
+  if (e.target !== editor || e.button != 1) return;
+  e.preventDefault();
   isPanning = true;
   panStartX = e.clientX;
   panStartY = e.clientY;
@@ -137,8 +138,8 @@ document.addEventListener("mousemove", e => {
   window.scrollTo(initialScrollX - dx, initialScrollY - dy);
 });
 
-document.addEventListener("mouseup", () => {
-  if (isPanning) {
+document.addEventListener("mouseup", (e) => {
+  if (isPanning && e.button == 1) {
       isPanning = false;
       editor.style.cursor = uiConfig.styles.defaultCursor;
   }

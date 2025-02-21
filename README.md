@@ -29,7 +29,7 @@ A simple node editor module for payung event datatype. To be integrated with Pay
 
 *   [ ] Implement Mouse Area Selection for Nodes
 *   [ ] Delete nodes with keyboard (Delete key)
-*   [ ] Middle-click to pan the editor view
+*   [X] Middle-click to pan the editor view
 *   [ ] Context menu for copy/paste and bulk delete operations
 *   [ ] Audio SFX and music per scene
 *   [ ] Music transitions
