@@ -17,19 +17,13 @@ A simple node editor module for payung event datatype. To be integrated with Pay
 
 ## Known Issues
 
-**Current Bugs and Glitches:**
-
-*   [X] SFX must be re-added each time a detail sprite is edited. (removed in Kaede)
-*   [X] SFX is not yet implemented in the scene preview. (removed in Kaede)
-*   [ ] Actor/Speaker color is not saved.
-
 ## Current Milestones (Kaede)
 
 **To Do:**
 
 *   [ ] Implement Mouse Area Selection for Nodes
 *   [ ] Delete nodes with keyboard (Delete key)
-*   [X] Middle-click to pan the editor view
+*   [X] Middle-click to pan the editor view (implemented in payung)
 *   [ ] Context menu for copy/paste and bulk delete operations
 *   [ ] Audio SFX and music per scene
 *   [ ] Music transitions
